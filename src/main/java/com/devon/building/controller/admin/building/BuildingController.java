@@ -7,7 +7,6 @@ import com.devon.building.model.request.BuildingCreateRequestDTO;
 import com.devon.building.model.request.BuildingSearchRequest;
 import com.devon.building.model.response.AssignmentBuildingResponseDTO;
 import com.devon.building.model.response.BuildingSearchResponse;
-import com.devon.building.repository.AssignmentBuildingRepository;
 import com.devon.building.repository.BuildingRepository;
 import com.devon.building.service.BuildingService;
 import com.devon.building.service.UserService;
@@ -44,9 +43,6 @@ public class BuildingController {
 
     @Autowired
     private BuildingConvertor buildingConvertor;
-
-    @Autowired
-    private AssignmentBuildingRepository assignmentBuildingRepository;
 
     @InitBinder("buildingSearchRequest")
     public void initBuildingSearchBinder(WebDataBinder binder) {
@@ -100,11 +96,11 @@ public class BuildingController {
     @GetMapping("/assignment-staff")
     @ResponseBody
     public List<AssignmentBuildingResponseDTO> assignmentStaff(@RequestParam("buildingId") Long buildingId) {
-        buildingRepository.findById(buildingId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         Map<Long, String> users = userService.getStaffs();
-        Set<Long> assignedStaffIds = assignmentBuildingRepository.findByBuilding_Id(buildingId).stream()
-                .map(ab -> ab.getUser().getId())
+        Set<Long> assignedStaffIds = buildingRepository.findById(buildingId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND))
+                .getStaffs().stream()
+                .map(user -> user.getId())
                 .collect(Collectors.toSet());
         List<AssignmentBuildingResponseDTO> dtos = new ArrayList<>();
         for (Map.Entry<Long, String> e : users.entrySet()) {

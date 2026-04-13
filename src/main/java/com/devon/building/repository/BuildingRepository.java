@@ -10,7 +10,7 @@ public interface BuildingRepository extends JpaRepository<Building, Long> {
 
     @Query("""
             SELECT DISTINCT b FROM Building b
-            LEFT JOIN b.assignmentBuildings ab
+            LEFT JOIN b.staffs s
             LEFT JOIN b.rentAreas ra
             WHERE (:name IS NULL OR b.name LIKE %:name%)
               AND (:ward IS NULL OR b.ward LIKE %:ward%)
@@ -26,7 +26,7 @@ public interface BuildingRepository extends JpaRepository<Building, Long> {
               AND (:priceT IS NULL OR b.price <= :priceT)
               AND (:managerName IS NULL OR b.managerName LIKE %:managerName%)
               AND (:managerPhone IS NULL OR b.managerPhone LIKE %:managerPhone%)
-              AND (:staffId IS NULL OR ab.user.id = :staffId)
+              AND (:staffId IS NULL OR s.id = :staffId)
               AND (:noTypeFilter = TRUE
                    OR (:type0 IS NOT NULL AND CONCAT(',', REPLACE(b.type, ' ', ''), ',') LIKE CONCAT('%,', :type0, ',%'))
                    OR (:type1 IS NOT NULL AND CONCAT(',', REPLACE(b.type, ' ', ''), ',') LIKE CONCAT('%,', :type1, ',%'))

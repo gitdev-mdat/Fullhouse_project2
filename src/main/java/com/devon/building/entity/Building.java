@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -118,8 +119,13 @@ public class Building implements Serializable {
     @Column(name = "createddate", nullable = false)
     private Date createDate;
 
-    @OneToMany(mappedBy = "building")
-    private List<AssignmentBuilding> assignmentBuildings;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "assignmentbuilding",
+            joinColumns = @JoinColumn(name = "buildingId"),
+            inverseJoinColumns = @JoinColumn(name = "staffId")
+    )
+    private Set<User> staffs;
 
     @OneToMany(mappedBy="building")
     @JsonManagedReference

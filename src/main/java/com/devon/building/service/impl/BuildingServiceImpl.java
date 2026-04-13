@@ -1,7 +1,6 @@
 package com.devon.building.service.impl;
 
 import com.devon.building.convertor.BuildingConvertor;
-import com.devon.building.entity.AssignmentBuilding;
 import com.devon.building.entity.Building;
 import com.devon.building.entity.RentArea;
 import com.devon.building.entity.User;
@@ -10,7 +9,6 @@ import com.devon.building.model.dto.ResponseDTO;
 import com.devon.building.model.request.BuildingAssignedRequestDTO;
 import com.devon.building.model.request.BuildingCreateRequestDTO;
 import com.devon.building.model.request.BuildingSearchRequest;
-import com.devon.building.repository.AssignmentBuildingRepository;
 import com.devon.building.repository.BuildingRepository;
 import com.devon.building.repository.RentAreaRepository;
 
@@ -23,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,9 +34,6 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     private RentAreaRepository rentAreaRepository;
-
-    @Autowired
-    private AssignmentBuildingRepository assignmentBuildingRepository;
 
     @Autowired
     private BuildingConvertor buildingConvertor;
@@ -112,7 +109,6 @@ public class BuildingServiceImpl implements BuildingService {
     public void delete(List<Long> ids) {
         for (Long id : ids) {
             rentAreaRepository.deleteByBuilding_Id(id);
-            assignmentBuildingRepository.deleteByBuilding_Id(id);
         }
         buildingRepository.deleteAllById(ids);
     }
@@ -121,16 +117,15 @@ public class BuildingServiceImpl implements BuildingService {
     @Transactional
     public void assignBuilding(BuildingAssignedRequestDTO dto) {
         Building building = buildingRepository.findById(dto.getBuildingId()).orElseThrow(() -> new EntityNotFoundException("Building not found"));
-        assignmentBuildingRepository.deleteByBuilding_Id(dto.getBuildingId());
-        for (Long i : dto.getStaffIds()) {
-            User user = userRepository.findById(i).orElseThrow(() -> new EntityNotFoundException("User not found"));
-            if (user != null) {
-                AssignmentBuilding assignmentBuilding = new AssignmentBuilding();
-                assignmentBuilding.setBuilding(building);
-                assignmentBuilding.setUser(user);
-                assignmentBuildingRepository.save(assignmentBuilding);
+        Set<User> staffs = new HashSet<>();
+        if (dto.getStaffIds() != null) {
+            for (Long i : dto.getStaffIds()) {
+                User user = userRepository.findById(i).orElseThrow(() -> new EntityNotFoundException("User not found"));
+                staffs.add(user);
             }
         }
+        building.setStaffs(staffs);
+        buildingRepository.save(building);
 
     }
 }

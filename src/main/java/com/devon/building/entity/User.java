@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "User")
@@ -64,8 +64,8 @@ public class User extends BaseEntity implements Serializable{
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<AssignmentBuilding> assignmentBuildings;
+    @ManyToMany(mappedBy = "staffs")
+    private Set<Building> assignedBuildings;
 
     @Override
     public String toString() {
