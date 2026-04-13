@@ -15,6 +15,8 @@ import com.devon.building.repository.RentAreaRepository;
 import com.devon.building.repository.UserRepository;
 import com.devon.building.service.BuildingService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +43,7 @@ public class BuildingServiceImpl implements BuildingService {
     private UserRepository userRepository;
 
     @Override
-    public List<Building> search(BuildingSearchRequest req) {
+    public Page<Building> search(BuildingSearchRequest req, Pageable pageable) {
         List<String> typeCodes = req.getTypeCodes();
         boolean noTypeFilter;
         String type0 = null;
@@ -83,7 +85,8 @@ public class BuildingServiceImpl implements BuildingService {
                 noTypeFilter,
                 type0,
                 type1,
-                type2
+                type2,
+                pageable
         );
     }
 

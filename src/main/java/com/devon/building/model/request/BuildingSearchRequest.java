@@ -27,6 +27,6 @@ public class BuildingSearchRequest {
     Double rentPriceT; // ___
     String managerName; // entity User
     String managerPhone; // ____
-    Long staffId; // entity assignmentbuilding
+    Long staffId; // entity User
     List<String> typeCodes;
 }

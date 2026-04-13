@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -59,16 +61,24 @@ public class BuildingController {
     }
 
     @GetMapping("/list")
-    public String getBuildings(@ModelAttribute BuildingSearchRequest buildingSearchRequest, Model model) {
+    public String getBuildings(@ModelAttribute BuildingSearchRequest buildingSearchRequest,
+                               @RequestParam(defaultValue = "1") int page,
+                               @RequestParam(defaultValue = "10") int size,
+                               Model model) {
+        int pageIndex = Math.max(page, 1);
+        int pageSize = size <= 0 ? 10 : size;
         model.addAttribute("modelSearch", buildingSearchRequest);
         model.addAttribute("staffs", userService.getStaffs());
         model.addAttribute("districts", District.getDistricts());
         List<BuildingSearchResponse> bsr = new ArrayList<>();
-        List<Building> buildings = buildingService.search(buildingSearchRequest);
-        for (Building b : buildings) {
+        Page<Building> buildingPage = buildingService.search(buildingSearchRequest, PageRequest.of(pageIndex - 1, pageSize));
+        for (Building b : buildingPage.getContent()) {
             bsr.add(buildingConvertor.convertToResponseDTO(b));
         }
         model.addAttribute("result", bsr);
+        model.addAttribute("currentPage", pageIndex);
+        model.addAttribute("totalPages", buildingPage.getTotalPages());
+        model.addAttribute("pageSize", pageSize);
         return "admin/building/buildingList";
     }
 

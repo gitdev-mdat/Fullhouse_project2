@@ -1,11 +1,13 @@
 package com.devon.building.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name="customer")
@@ -38,5 +40,9 @@ public class Customer extends BaseEntity implements Serializable {
 
     @Column(name="is_active")
     private Boolean isActive;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "assignedCustomers")
+    private Set<User> staffs;
 
 }

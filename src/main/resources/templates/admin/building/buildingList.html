@@ -377,6 +377,61 @@
                     </tbody>
                   </table>
                 </div>
+                <div class="row" th:if="${totalPages > 0}">
+                  <div class="col-xs-12 text-center">
+                    <ul class="pagination" style="margin: 10px 0">
+                      <li th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a th:href="${currentPage == 1} ? '#'
+                          : @{/admin/buildings/list(
+                            page=${currentPage - 1},
+                            size=${pageSize},
+                            buildingName=${modelSearch.buildingName},
+                            floorArea=${modelSearch.floorArea},
+                            district=${modelSearch.district},
+                            ward=${modelSearch.ward},
+                            street=${modelSearch.street},
+                            numberOfBasement=${modelSearch.numberOfBasement},
+                            direction=${modelSearch.direction},
+                            level=${modelSearch.level},
+                            areaF=${modelSearch.areaF},
+                            areaT=${modelSearch.areaT},
+                            rentPriceF=${modelSearch.rentPriceF},
+                            rentPriceT=${modelSearch.rentPriceT},
+                            managerName=${modelSearch.managerName},
+                            managerPhone=${modelSearch.managerPhone},
+                            staffId=${modelSearch.staffId},
+                            typeCodes=${modelSearch.typeCodes}
+                          )}">Prev</a>
+                      </li>
+                      <li class="disabled">
+                        <a href="#" th:text="|Page ${currentPage} / ${totalPages}|"></a>
+                      </li>
+                      <li th:classappend="${currentPage >= totalPages} ? 'disabled'">
+                        <a th:href="${currentPage >= totalPages} ? '#'
+                          : @{/admin/buildings/list(
+                            page=${currentPage + 1},
+                            size=${pageSize},
+                            buildingName=${modelSearch.buildingName},
+                            floorArea=${modelSearch.floorArea},
+                            district=${modelSearch.district},
+                            ward=${modelSearch.ward},
+                            street=${modelSearch.street},
+                            numberOfBasement=${modelSearch.numberOfBasement},
+                            direction=${modelSearch.direction},
+                            level=${modelSearch.level},
+                            areaF=${modelSearch.areaF},
+                            areaT=${modelSearch.areaT},
+                            rentPriceF=${modelSearch.rentPriceF},
+                            rentPriceT=${modelSearch.rentPriceT},
+                            managerName=${modelSearch.managerName},
+                            managerPhone=${modelSearch.managerPhone},
+                            staffId=${modelSearch.staffId},
+                            typeCodes=${modelSearch.typeCodes}
+                          )}">Next</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
                 <!-- PAGE CONTENT ENDS -->
               </div>
               <!-- /.col -->

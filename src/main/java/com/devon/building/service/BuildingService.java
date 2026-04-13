@@ -4,11 +4,12 @@ import com.devon.building.entity.Building;
 import com.devon.building.model.request.BuildingAssignedRequestDTO;
 import com.devon.building.model.request.BuildingCreateRequestDTO;
 import com.devon.building.model.request.BuildingSearchRequest;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface BuildingService {
-    List<Building> search(BuildingSearchRequest buildingSearchRequest);
+    Page<Building> search(BuildingSearchRequest buildingSearchRequest, Pageable pageable);
 
     void create(BuildingCreateRequestDTO dto);
 

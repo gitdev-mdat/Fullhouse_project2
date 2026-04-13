@@ -67,6 +67,15 @@ public class User extends BaseEntity implements Serializable{
     @ManyToMany(mappedBy = "staffs")
     private Set<Building> assignedBuildings;
 
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "assignmentcustomer",
+            joinColumns = @JoinColumn(name = "staffId"),
+            inverseJoinColumns = @JoinColumn(name = "customerId")
+    )
+    private Set<Customer> assignedCustomers;
+
     @Override
     public String toString() {
         return "[" + this.userName + "," + this.encrytedPassword + "," + this.userRole + "]";
