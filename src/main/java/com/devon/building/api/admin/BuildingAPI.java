@@ -5,6 +5,7 @@ import com.devon.building.model.request.BuildingAssignedRequestDTO;
 import com.devon.building.model.request.BuildingCreateRequestDTO;
 import com.devon.building.service.BuildingService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-        @RequestMapping("/api/buildings")
+@RequestMapping("/api/buildings")
+@AllArgsConstructor
 public class BuildingAPI {
-    @Autowired
-    private BuildingService buildingService;
+    private final BuildingService buildingService;
 
     @PostMapping
     public ResponseEntity<Object> addBuilding(@RequestBody @Valid BuildingCreateRequestDTO dto, BindingResult bindingResult) {
