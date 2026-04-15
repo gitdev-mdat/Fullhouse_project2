@@ -63,10 +63,10 @@ public class BuildingController {
     @GetMapping("/list")
     public String getBuildings(@ModelAttribute BuildingSearchRequest buildingSearchRequest,
                                @RequestParam(defaultValue = "1") int page,
-                               @RequestParam(defaultValue = "10") int size,
+                               @RequestParam(defaultValue = "5") int size,
                                Model model) {
         int pageIndex = Math.max(page, 1);
-        int pageSize = size <= 0 ? 10 : size;
+        int pageSize = size <= 0 ? 5 : size;
         model.addAttribute("modelSearch", buildingSearchRequest);
         model.addAttribute("staffs", userService.getStaffs());
         model.addAttribute("districts", District.getDistricts());
